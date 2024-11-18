@@ -7,7 +7,7 @@ theme:
   name: material
   custom_dir: overrides
   icon:
-    logo: assets/logo.jpg
+    logo: assets/敲电脑动作.svg
   features:
     - content.code.copy
     - navigation.sections
