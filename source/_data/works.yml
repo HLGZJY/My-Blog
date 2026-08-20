@@ -5,6 +5,7 @@
 # 每条记录字段说明：
 #   name       作品名称（必填）
 #   url        作品链接（外链或站内 /posts/xxx/）
+#   date       时间/日期（可选），如 2023-12、2026-08，会在卡片右上角显示
 #   description 一句话简介
 #   icon       Font Awesome 图标（可选），如 fab fa-github / fas fa-book
 #   tags       技术栈/标签数组（可选）
@@ -15,18 +16,21 @@ note_title: 文章 / 笔记
 projects:
   - name: My-Blog
     url: /
-    description: 本站的源码仓库，基于 Hexo + Butterfly 的二次元风格个人博客
+    date: 2026-08
+    description: 本站的源码仓库，基于 Hexo + Butterfly 的二次元风格个人博客，持续更新中
     icon: fas fa-blog
     tags: [Hexo, Butterfly, Markdown]
 
   - name: 教师信息管理系统
     url: https://github.com/HLGZJY/c-course-design-teacher-system
+    date: 2023-12
     description: C 语言课程设计，控制台教师信息增删改查、排序、多维统计与二进制文件持久化
     icon: fab fa-github
     tags: [C, 课程设计]
 
   - name: 校易通
     url: https://github.com/HLGZJY/My_School_Store_Tool
+    date: 2026-08
     description: 校园信息聚合微信小程序，聚合多源校园资讯，AI 智能解析、标签提取与三角色个性化推荐
     icon: fab fa-github
     tags: [uni-app, Vue3, 微信小程序, AI]
@@ -34,6 +38,7 @@ projects:
 notes:
   - name: 博客搭建记录
     url: /posts/
+    date: 2026-08
     description: 记录从零搭建这个二次元博客的全过程与踩坑笔记
     icon: fas fa-pen-nib
     tags: [教程, Hexo]

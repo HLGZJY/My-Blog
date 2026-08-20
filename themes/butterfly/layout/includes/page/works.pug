@@ -12,10 +12,15 @@
     .works-grid
       each item in site.data.works.projects
         .work-card
-          h3
-            a(href=url_for(item.url) target=(item.url.indexOf('http') === 0 ? '_blank' : undefined) rel=item.url.indexOf('http') === 0 ? 'noopener noreferrer' : undefined)
-              i(class=item.icon || 'fab fa-github')
-              span= item.name
+          .work-head
+            h3
+              a(href=url_for(item.url) target=(item.url.indexOf('http') === 0 ? '_blank' : undefined) rel=item.url.indexOf('http') === 0 ? 'noopener noreferrer' : undefined)
+                i(class=item.icon || 'fab fa-github')
+                span= item.name
+            if item.date
+              .work-date
+                i.fas.fa-calendar-alt
+                span= item.date
           p= item.description
           if item.tags
             .work-tags
@@ -29,10 +34,15 @@
     .works-grid
       each item in site.data.works.notes
         .work-card
-          h3
-            a(href=url_for(item.url) target=(item.url.indexOf('http') === 0 ? '_blank' : undefined) rel=item.url.indexOf('http') === 0 ? 'noopener noreferrer' : undefined)
-              i(class=item.icon || 'fas fa-book')
-              span= item.name
+          .work-head
+            h3
+              a(href=url_for(item.url) target=(item.url.indexOf('http') === 0 ? '_blank' : undefined) rel=item.url.indexOf('http') === 0 ? 'noopener noreferrer' : undefined)
+                i(class=item.icon || 'fas fa-book')
+                span= item.name
+            if item.date
+              .work-date
+                i.fas.fa-calendar-alt
+                span= item.date
           p= item.description
           if item.tags
             .work-tags
