@@ -19,11 +19,11 @@ projects:
     icon: fas fa-blog
     tags: [Hexo, Butterfly, Markdown]
 
-  - name: 我的第一个开源项目
-    url: https://github.com/HLGZJY
-    description: 这是一个示例项目卡片，替换成你自己的项目
+  - name: 教师信息管理系统
+    url: https://github.com/HLGZJY/c-course-design-teacher-system
+    description: C 语言课程设计，控制台教师信息增删改查、排序、多维统计与二进制文件持久化
     icon: fab fa-github
-    tags: [JavaScript, GitHub]
+    tags: [C, 课程设计]
 
 notes:
   - name: 博客搭建记录

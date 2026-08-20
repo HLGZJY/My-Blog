@@ -21,16 +21,16 @@
 3. **主题配置**：`_config.butterfly.yml`（二次元粉蓝配色、菜单、明暗模式、本地搜索、giscus 评论 zh-CN）
 4. **作品集页** `/works/`：数据驱动（`source/_data/works.yml`），自定义 `works.pug` 布局渲染卡片，分「编程项目」「文章/笔记」两区
 5. **页面**：首页 / 作品集 / 归档 / 分类 / 标签 / 相册（含 壁纸·日常 两个子相册）/ 关于
-6. **Live2D 看板娘**：oh-my-live2d 插件 + wanko 免费模型，库与模型**全部本地化**（`source/oml2d/`、`source/live2d_models/`），无外部 CDN
+6. **Live2D 看板娘**：oh-my-live2d 插件 + **shizuku 蓝发少女**模型，库与模型**全部本地化**（`source/oml2d/`、`source/live2d_models/shizuku/`），无外部 CDN
 7. **点击爱心特效**：自写 `source/js/custom.js`，不依赖 CDN
 8. **第三方脚本本地化**：安装 `hexo-butterfly-extjs`，`third_party_provider: local`，FontAwesome/分享/高亮等全部打进 `pluginsSrc`，国内访问无需外网
-9. **自动部署**：`.github/workflows/deploy.yml`
+9. **自动部署**：`.github/workflows/deploy.yml`（已验证线上正常）
 10. **文章**：删除了旧的 hello-world，写了一篇《欢迎来到我的小站》开篇文章
 11. **README**：写明「发文章 / 加作品 / 加相册」三步编辑流程
+12. **AGENTS.md**：新会话自动加载的入口，指向本记录
 
 ## 三、待办 / 可继续做的事
 
-- [ ] **推送后验证线上部署**（`git push origin main` 后等 Actions 跑完，浏览器检查 https://hlgzjy.github.io/My-Blog/）
 - [ ] 填写真实的作品集内容（`source/_data/works.yml` 目前是示例卡片）
 - [ ] 替换相册占位图（`source/album/` 用的是占位 SVG）
 - [ ] 写自己的真实文章（`source/_posts/`）
@@ -66,10 +66,12 @@ npm run deploy         # （本地部署，本项目一般用 CI，不需要）
 3. **giscus 评论**需要仓库开启 Discussions 且配置了 Announcements 分类（旧站已配好，repo_id/category_id 已填入主题配置）。
 4. **预览截图**：构建时可用 `preview/` 文件夹放截图（已被 .gitignore，不会提交）。
 5. 本地无脑测：直接 `npx hexo server` 后开 http://localhost:4000/My-Blog/ 看效果，改完配置 `Ctrl+C` 重跑 `hexo clean && hexo generate && hexo server`。
+6. **看板娘模型来源**：shizuku 来自 fghrsh 经典系列，仅限**个人/非商业**使用，出处与协议见 `source/live2d_models/shizuku/README.md`。npmmirror 会以 451 拒发 mp3 音效（法律原因），需从 unpkg 补。
+7. **Actions 有个 Node 20 弃用告警**（`actions/checkout@v4`/`setup-node@v4`），目前不影响构建；后续可把 `node-version` 提到 24。
 
 ## 七、下一步建议（如果继续开发）
 
-1. 先推 main 确认线上正常（Actions 日志绿勾 + 浏览器可访问）
-2. 把 `source/_data/works.yml` 换成自己的真实项目（GitHub 链接 + 简介 + 技术栈）
-3. 用 `npx hexo new post "文章名"` 写第一篇技术笔记，体验「push 即发布」流程
-4. 有好看的头图后，把 `source/img/album/` 的占位图换掉，并给文章配封面
+1. 把 `source/_data/works.yml` 换成自己的真实项目（GitHub 链接 + 简介 + 技术栈）
+2. 用 `npx hexo new post "文章名"` 写第一篇技术笔记，体验「push 即发布」流程
+3. 有好看的头图后，把 `source/img/album/` 的占位图换掉，并给文章配封面
+4. 改完 push main 后，等 Actions 绿勾（约 1 分钟）再到线上刷新验证
