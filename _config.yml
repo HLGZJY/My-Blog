@@ -109,6 +109,8 @@ deploy:
 # hexo-oh-my-live2d 看板娘配置
 # 库和模型都已本地化（source/oml2d、source/live2d_models），
 # 不依赖任何外部 CDN，部署后即可使用。
+# 模型：shizuku 蓝发少女（fghrsh 经典看板娘，个人/非商业使用）
+# 出处与协议见 source/live2d_models/shizuku/README.md
 # 提示：若以后改了仓库名，需同步修改下方 /My-Blog/ 前缀。
 # --------------------------------------
 OhMyLive2d:
@@ -118,12 +120,12 @@ OhMyLive2d:
     dockedPosition: 'right' # 模型停靠位置: left / right
     mobileDisplay: false # 移动端不显示
     models:
-      - path: /My-Blog/live2d_models/wanko/wanko.model.json
-        scale: 0.2
+      - path: /My-Blog/live2d_models/shizuku/shizuku.model.json
+        scale: 0.15
         position: [-10, 35]
         stageStyle:
-          width: 300
-          height: 300
+          width: 250
+          height: 250
         motionPreloadStrategy: IDLE
     primaryColor: '#ff7eb3'
     sayHello: false
@@ -136,6 +138,6 @@ OhMyLive2d:
       idleTips:
         interval: 15000
         message:
-          - 汪！欢迎来到我的小站
+          - 你好呀~ 欢迎来到我的小站
           - 点击页面会有爱心出现哦~
           - 认真看代码的人最可爱了 ✨
