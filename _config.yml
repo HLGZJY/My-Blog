@@ -1,0 +1,141 @@
+# Hexo Configuration
+## Docs: https://hexo.io/docs/configuration.html
+## Source: https://github.com/hexojs/hexo/
+
+# Site
+title: This is a Blog of Ariey~
+subtitle: '二次元的代码小屋'
+description: 'Ariey 的个人博客：记录编程、学习与生活的二次元角落'
+keywords:
+  - blog
+  - 二次元
+  - 编程
+  - anime
+author: Ariey
+language: zh-CN
+timezone: 'Asia/Shanghai'
+
+# URL
+## 如果使用 GitHub Pages 项目页，url 需包含仓库子路径，root 为子路径
+url: https://hlgzjy.github.io/My-Blog
+root: /My-Blog/
+permalink: posts/:title/
+permalink_defaults:
+pretty_urls:
+  trailing_index: true
+  trailing_html: true
+
+# Directory
+source_dir: source
+public_dir: public
+tag_dir: tags
+archive_dir: archives
+category_dir: categories
+code_dir: downloads/code
+i18n_dir: :lang
+skip_render:
+
+# Writing
+new_post_name: :title.md
+default_layout: post
+titlecase: false
+external_link:
+  enable: true
+  field: site
+  exclude: ''
+filename_case: 0
+render_drafts: false
+post_asset_folder: false
+relative_link: false
+future: true
+syntax_highlighter: highlight.js
+highlight:
+  line_number: true
+  auto_detect: false
+  tab_replace: ''
+  wrap: true
+  hljs: false
+prismjs:
+  preprocess: true
+  line_number: true
+  tab_replace: ''
+
+# Home page setting
+index_generator:
+  path: ''
+  per_page: 10
+  order_by: -date
+
+# Category & Tag
+default_category: uncategorized
+category_map:
+tag_map:
+
+# Metadata elements
+meta_generator: true
+
+# Date / Time format
+date_format: YYYY-MM-DD
+time_format: HH:mm:ss
+updated_option: 'mtime'
+
+# Pagination
+per_page: 10
+pagination_dir: page
+
+# Include / Exclude file(s)
+include:
+exclude:
+ignore:
+
+# Extensions
+## Plugins: https://hexo.io/plugins/
+## Themes: https://hexo.io/themes/
+theme: butterfly
+
+# 本地搜索（配合 Butterfly 主题 search 功能）
+search:
+  path: search.xml
+  field: post
+  content: true
+  format: html
+
+# Deployment
+## 本仓库通过 GitHub Actions 自动部署到 gh-pages，无需本地 hexo deploy
+deploy:
+  type: ''
+
+# --------------------------------------
+# hexo-oh-my-live2d 看板娘配置
+# 库和模型都已本地化（source/oml2d、source/live2d_models），
+# 不依赖任何外部 CDN，部署后即可使用。
+# 提示：若以后改了仓库名，需同步修改下方 /My-Blog/ 前缀。
+# --------------------------------------
+OhMyLive2d:
+  enable: true
+  CDN: /My-Blog/oml2d/index.min.js
+  option:
+    dockedPosition: 'right' # 模型停靠位置: left / right
+    mobileDisplay: false # 移动端不显示
+    models:
+      - path: /My-Blog/live2d_models/wanko/wanko.model.json
+        scale: 0.2
+        position: [-10, 35]
+        stageStyle:
+          width: 300
+          height: 300
+        motionPreloadStrategy: IDLE
+    primaryColor: '#ff7eb3'
+    sayHello: false
+    tips:
+      style:
+        width: 230
+        height: 120
+        left: calc(50% - 20px)
+        top: -100px
+      idleTips:
+        interval: 15000
+        message:
+          - 汪！欢迎来到我的小站
+          - 点击页面会有爱心出现哦~
+          - 认真看代码的人最可爱了 ✨

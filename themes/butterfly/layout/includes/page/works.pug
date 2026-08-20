@@ -1,0 +1,40 @@
+//- 作品集页面组件
+//- 数据来源：source/_data/works.yml
+//- 用法：新增作品 → 在 works.yml 的 projects 或 notes 列表里加一条即可
+#article-container.works-wrap
+  if page.content
+    != page.content
+
+  if site.data.works.projects && site.data.works.projects.length > 0
+    h2.section-title
+      i.fas.fa-laptop-code
+      span= site.data.works.project_title || '编程项目'
+    .works-grid
+      each item in site.data.works.projects
+        .work-card
+          h3
+            a(href=url_for(item.url) target=(item.url.indexOf('http') === 0 ? '_blank' : undefined) rel=item.url.indexOf('http') === 0 ? 'noopener noreferrer' : undefined)
+              i(class=item.icon || 'fab fa-github')
+              span= item.name
+          p= item.description
+          if item.tags
+            .work-tags
+              each tag in item.tags
+                span= tag
+
+  if site.data.works.notes && site.data.works.notes.length > 0
+    h2.section-title
+      i.fas.fa-pen-nib
+      span= site.data.works.note_title || '文章 / 笔记'
+    .works-grid
+      each item in site.data.works.notes
+        .work-card
+          h3
+            a(href=url_for(item.url) target=(item.url.indexOf('http') === 0 ? '_blank' : undefined) rel=item.url.indexOf('http') === 0 ? 'noopener noreferrer' : undefined)
+              i(class=item.icon || 'fas fa-book')
+              span= item.name
+          p= item.description
+          if item.tags
+            .work-tags
+              each tag in item.tags
+                span= tag

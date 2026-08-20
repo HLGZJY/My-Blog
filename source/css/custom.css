@@ -1,0 +1,145 @@
+/* ========================================
+   My-Blog 二次元定制样式 custom.css
+   在此修改博客的配色、圆角、卡片等外观
+   变量参考 Butterfly 主题默认 CSS 变量
+   ======================================== */
+
+/* 主题色：樱花粉 + 青蓝 二次元配色 */
+:root {
+  --btn-bg: #ff7eb3;
+  --btn-hover-color: #ff5c8a;
+  --theme-color: #ff7eb3;
+  --theme-color-gb: #ff7eb3;
+  --card-hover-color: rgba(255, 126, 179, 0.15);
+  --light-grey: #f6f8fa;
+  --primary-color: #ff7eb3;
+}
+
+/* 首页顶部横幅：梦幻渐变 */
+#page-header {
+  background: linear-gradient(135deg, #ffb8d0 0%, #a0d8ef 50%, #c5b3ff 100%) !important;
+}
+
+/* 圆角卡片 */
+#recent-posts > .recent-post-item,
+.layout > #page,
+.layout_post > #post,
+.aside-content > .card-widget,
+.read-mode .layout_post > #post {
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(120, 120, 200, 0.12);
+}
+
+/* 卡片悬停微动效 */
+#recent-posts > .recent-post-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(120, 120, 200, 0.18);
+  transition: all 0.3s ease;
+}
+
+/* 正文中的链接颜色 */
+#article-container a {
+  color: #ff5c8a;
+}
+
+/* 滚动条：粉色主题 */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #ffb8d0, #a0d8ef);
+}
+
+/* 选中文字颜色 */
+::selection {
+  background: #ffb8d0;
+  color: #fff;
+}
+
+/* 页面背景：柔和渐变，适应暗色模式 */
+[data-theme='light'] body {
+  background: linear-gradient(180deg, #fff5f9 0%, #f0f8ff 100%) fixed;
+}
+
+[data-theme='dark'] body {
+  background: #1a1a2e;
+}
+
+/* 404 页面二次元感 */
+.error-page {
+  text-align: center;
+  padding: 4rem 1rem;
+}
+
+/* 作品集卡片样式（配合 /works/ 页面） */
+.works-wrap h2.section-title {
+  font-size: 1.6rem;
+  color: var(--primary-color);
+  margin: 2rem 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.works-wrap .works-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.2rem;
+}
+
+.works-wrap .work-card {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 126, 179, 0.2);
+  padding: 1.2rem 1.3rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+[data-theme='dark'] .works-wrap .work-card {
+  background: #23233c;
+}
+
+.works-wrap .work-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 26px rgba(255, 126, 179, 0.22);
+}
+
+.works-wrap .work-card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+}
+
+.works-wrap .work-card h3 a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.works-wrap .work-card p {
+  margin: 0 0 0.8rem;
+  font-size: 0.9rem;
+  color: #6a6a8a;
+  line-height: 1.6;
+}
+
+[data-theme='dark'] .works-wrap .work-card p {
+  color: #b0b0c8;
+}
+
+.works-wrap .work-card .work-tags {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.works-wrap .work-card .work-tags span {
+  font-size: 0.72rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(255, 126, 179, 0.12);
+  color: #ff5c8a;
+}
+
+/* 相册 / 图集卡片 */
+.gallery-group .gallery-group-name {
+  color: #ff5c8a;
+}
