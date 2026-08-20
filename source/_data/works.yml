@@ -25,6 +25,12 @@ projects:
     icon: fab fa-github
     tags: [C, 课程设计]
 
+  - name: 校易通
+    url: https://github.com/HLGZJY/My_School_Store_Tool
+    description: 校园信息聚合微信小程序，聚合多源校园资讯，AI 智能解析、标签提取与三角色个性化推荐
+    icon: fab fa-github
+    tags: [uni-app, Vue3, 微信小程序, AI]
+
 notes:
   - name: 博客搭建记录
     url: /posts/
