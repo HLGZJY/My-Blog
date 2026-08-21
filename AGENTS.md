@@ -8,9 +8,9 @@
 
 ## 开发流程（重要）
 
-- **改什么**：写文章 → `source/_posts/`；加作品 → `source/_data/works.yml`；加相册 → `source/album/`
+- **改什么**：写文章 → `source/_posts/`；加编程项目 → `source/works/` 新建 .md（模板 `scaffolds/project.md`，`tone` 字段定义卡片色调）；加笔记 → `source/_data/works.yml` 的 notes；加相册 → `source/album/`
 - **本地预览**：`npx hexo server`（若未 `npm install` 先装依赖），地址 http://localhost:4000/My-Blog/
-- **验证**：`npx hexo clean && npx hexo generate`，无报错即可
+- **验证**：`npx hexo clean && npm run build`，无报错即可（build = generate + 优化裁剪脚本）
 - **发布**：`git push origin main` → GitHub Actions 自动构建部署到 gh-pages（约 1 分钟），最后到线上刷新验证
 - 提交信息用中文或英文均可，描述清楚改动即可
 
@@ -20,8 +20,9 @@
 
 ## 关键约束 / 常见坑（详见 PROJECT_LOG.md）
 
-- 站点有子路径 `/My-Blog/`：改仓库名后需同步 `_config.yml` 的 `url`/`root` 和看板娘路径前缀
-- `themes/butterfly` 是 vendored 提交的（无 .git），主题升级后要保留自建的 `works` 页面组件
+- 站点有子路径 `/My-Blog/`：**所有 inject 里的静态资源路径必须带 `/My-Blog/` 前缀**（`_config.butterfly.yml` 的 custom.css/sw.js/custom.js 均已修正）；改仓库名后需同步 `_config.yml` 的 `url`/`root` 和看板娘路径前缀
+- `themes/butterfly` 是 vendored 提交的（无 .git），主题升级后要保留自建的 `works` 页面组件、`project.pug`、首页入口（`index.pug`）
+- `scripts/optimize-site.js` 是构建后优化脚本（裁剪 pluginsSrc + 生成 sw.js），**已在本次补回仓库**；若缺失需重新添加，否则 `npm run build` 会报 MODULE_NOT_FOUND
 - 看板娘 shizuku 模型仅限个人/非商业使用（出处见 `source/live2d_models/shizuku/README.md`）
 - `preview/` 目录已 gitignore（放截图用，勿提交）
 - 第三方脚本已全部本地化，国内可直访；新加依赖优先考虑本地化

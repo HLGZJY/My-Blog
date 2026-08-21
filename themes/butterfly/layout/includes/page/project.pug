@@ -1,0 +1,66 @@
+//- 项目详情页组件
+//- 页面类型：type: project
+//- 用法：在 source/works/ 下新建 .md 文件，front matter 设置 type: project
+//- 字段说明见 scaffolds/project.md
+
+//- 日期格式化（兼容「单日期」与「日期区间」）
+//-   Hexo 会把无法识别的区间字符串改写为文件修改时间，这里读取原始 front-matter 还原真实日期
+- function formatWorkDate(dateStr, compact) {
+-   if (!dateStr) return '';
+-   var segs = String(dateStr).split('-').filter(function (s) { return s.length > 0; });
+-   if (segs.length === 6) {
+-     var s1 = segs.slice(0, 3).join('-');
+-     var s2 = segs.slice(3).join('-');
+-     if (compact) return date(s1, 'YYYY.MM') + ' – ' + date(s2, 'YYYY.MM');
+-     return date(s1, 'YYYY-MM-DD') + ' ~ ' + date(s2, 'YYYY-MM-DD');
+-   }
+-   return date(dateStr, compact ? 'YYYY.MM' : 'YYYY-MM-DD');
+- }
+
+- function rawDateOf(page) {
+-   var m = (page.raw || '').toString().match(/^\s*date:\s*(.+?)\s*$/m);
+-   return m ? m[1] : (page.date ? date(page.date, 'YYYY-MM-DD') : '');
+- }
+
+#article-container.project-detail
+  //- 项目头部信息卡片
+  .project-hero
+    .project-hero__icon
+      i(class=page.icon || 'fas fa-laptop-code')
+    .project-hero__body
+      h1.project-hero__title= page.title
+      if page.subtitle
+        p.project-hero__subtitle= page.subtitle
+      .project-hero__meta
+        if rawDateOf(page)
+          span.project-meta__item
+            i.fas.fa-calendar-alt
+            = formatWorkDate(rawDateOf(page), false)
+        if page.role
+          span.project-meta__item
+            i.fas.fa-user-circle
+            = page.role
+      if page.tech_stack && page.tech_stack.length
+        .project-hero__tech
+          each tech in page.tech_stack
+            span.project-tech__badge= tech
+      if page.demo || page.repo
+        .project-hero__links
+          if page.demo
+            a.project-btn.project-btn--primary(href=page.demo target='_blank' rel='noopener noreferrer')
+              i.fas.fa-external-link-alt
+              span 在线演示
+          if page.repo
+            a.project-btn.project-btn--secondary(href=page.repo target='_blank' rel='noopener noreferrer')
+              i.fab.fa-github
+              span 源码仓库
+
+  //- 正文内容（Markdown 渲染）
+  .project-body
+    != page.content
+
+  //- 返回作品集
+  .project-back
+    a(href=url_for('/works/'))
+      i.fas.fa-arrow-left
+      span 返回作品集

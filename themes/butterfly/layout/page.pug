@@ -30,6 +30,9 @@ block content
       when 'works'
         include includes/page/works.pug
         +commentLoad
+      when 'project'
+        include includes/page/project.pug
+        +commentLoad
       default
         include includes/page/default-page.pug
         +commentLoad

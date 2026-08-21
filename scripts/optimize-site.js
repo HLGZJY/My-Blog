@@ -1,0 +1,236 @@
+/**
+ * optimize-site.js —— 构建后站点优化脚本
+ *
+ * 在 `hexo generate` 之后执行（package.json: build = "hexo generate && node scripts/optimize-site.js"）。
+ * 职责：
+ *   1. 配置驱动 denylist，裁剪「已禁用功能」对应的第三方插件目录，减小 gh-pages 部署体积；
+ *   2. 生成 Service Worker（public/sw.js），实现「导航网络优先 / 静态资源缓存优先」。
+ *
+ * 设计要点（详见根目录 OPTIMIZATION.md）：
+ *   - 不用 after_generate 钩子：generate 过程中删文件会触发 Hexo 增量重建循环。
+ *   - 仅删除「明确对应已关闭功能」且未被任何 HTML/CSS 引用的目录，绝不误删启用中的资源。
+ *   - 带 require.main 守卫：被 Hexo 当插件加载时不误执行。
+ */
+
+const fs = require('fs');
+const path = require('path');
+
+const root = path.resolve(__dirname, '..');
+const publicDir = path.join(root, 'public');
+const pluginsSrc = path.join(publicDir, 'pluginsSrc');
+const configPath = path.join(root, '_config.butterfly.yml');
+
+/** 读取 YAML 配置（不引入依赖，仅用正则提取关键开关） */
+function readConfig() {
+  const txt = fs.existsSync(configPath) ? fs.readFileSync(configPath, 'utf8') : '';
+  const cfg = {};
+
+  // math 是否启用：math.use 非空
+  const mathBlock = (txt.match(/^\s*math:\s*\n([\s\S]*?)^\S/m) || [])[1] || '';
+  cfg.mathEnabled = !!(mathBlock.match(/^\s*use:\s*(\S+)/m) || [])[1];
+
+  // search.use
+  const searchUse = (txt.match(/^\s*search:\s*\n([\s\S]*?)^\S/m) || [])[1] || txt;
+  cfg.searchUse = (searchUse.match(/^\s*use:\s*(\S+)/m) || [])[1] || '';
+
+  // share.use
+  cfg.shareUse = (txt.match(/^\s*share:\s*\n([\s\S]*?)^\S/m) || [])[1]
+    ? ((txt.match(/^\s*share:\s*\n([\s\S]*?)^\S/m) || [])[1].match(/^\s*use:\s*(\S+)/m) || [])[1] || ''
+    : '';
+
+  // comments.use（多行块）
+  const commentsBlock = (txt.match(/^\s*comments:\s*\n([\s\S]*?)^\S/m) || [])[1] || '';
+  cfg.commentsUse = (commentsBlock.match(/^\s*use:\s*(\S+)/m) || [])[1] || '';
+
+  // 各开关块：取 enable: true/false 或 空键
+  const flag = (blockName) => {
+    const b = (txt.match(new RegExp('^\\s*' + blockName + ':\\s*\\n([\\s\\S]*?)^\\S', 'm')) || [])[1] || '';
+    const en = (b.match(/^\s*enable:\s*(true|false)/m) || [])[1];
+    return en === 'true';
+  };
+
+  cfg.abcjs = flag('abcjs');
+  cfg.mermaid = flag('mermaid');
+  cfg.chartjs = flag('chartjs');
+  cfg.pjax = flag('pjax');
+  cfg.series = flag('series');
+
+  // lightbox：choose fancybox / medium_zoom，空则未启用
+  const lightboxBlock = (txt.match(/^\s*lightbox:\s*\n([\s\S]*?)^\S/m) || [])[1] || '';
+  cfg.lightboxUse = (lightboxBlock.match(/^\s*(fancybox|medium_zoom)\s*$/m) || [])[1] || '';
+
+  // instantpage
+  cfg.instantpage = /^\s*instantpage:\s*true/m.test(txt);
+
+  // 评论系统：giscus 是否配置
+  const giscusBlock = (txt.match(/^\s*giscus:\s*\n([\s\S]*?)^\S/m) || [])[1] || '';
+  cfg.giscus = /repo:\s*\S+/.test(giscusBlock);
+
+  return cfg;
+}
+
+/**
+ * 计算 denylist：被裁剪的插件目录名（相对 pluginsSrc）。
+ * 仅当「明确已关闭」才进入，避免误删。
+ */
+function buildDenylist(cfg) {
+  const deny = [];
+
+  // 数学渲染：math.use 空 → 不加载 katex/mathjax
+  if (!cfg.mathEnabled) {
+    deny.push('mathjax', 'katex');
+  }
+
+  // 搜索：use=local_search → 不需要 docsearch / algolia
+  if (cfg.searchUse !== 'docsearch') deny.push('@docsearch');
+  if (cfg.searchUse !== 'algolia_search') deny.push('algoliasearch');
+
+  // 评论系统：仅 giscus → 其它评论插件目录都可裁
+  const comments = ['disqusjs', 'gitalk', 'valine', 'waline', 'twikoo', 'artalk', 'node-snackbar'];
+  comments.forEach((c) => deny.push(c));
+
+  // 图库插件：未启用
+  if (cfg.abcjs) deny.push('abcjs');
+  if (cfg.mermaid) deny.push('mermaid');
+  if (cfg.chartjs) deny.push('chart.js');
+
+  // 灯箱
+  if (cfg.lightboxUse !== 'fancybox') deny.push('@fancyapps');
+  if (cfg.lightboxUse !== 'medium_zoom') deny.push('medium-zoom');
+
+  // pjax
+  if (cfg.pjax) deny.push('pjax');
+
+  // pace-js：若未启用进度条则裁（Butterfly 默认 disabled）
+  deny.push('pace-js');
+
+  // 保留列表（启用中，绝不裁）
+  const keep = new Set(['butterfly-extsrc', '@fortawesome', '@egjs', 'typed.js', 'instant.page', 'prismjs', 'sharejs', 'blueimp-md5', 'vanilla-lazyload']);
+
+  // 从 deny 剔除误入保留的
+  return deny.filter((d) => !keep.has(d));
+}
+
+/** 删除目录（安全：仅限 pluginsSrc 内的相对子目录） */
+function safeRmDir(relDir) {
+  const abs = path.join(pluginsSrc, relDir);
+  const target = path.normalize(abs);
+  const base = path.normalize(pluginsSrc);
+  if (!target.startsWith(base + path.sep)) {
+    console.warn(`[optimize] 跳过越界目录: ${relDir}`);
+    return false;
+  }
+  if (fs.existsSync(target)) {
+    fs.rmSync(target, { recursive: true, force: true });
+    return true;
+  }
+  return false;
+}
+
+/** 收集 public 下所有缓存资源路径（相对 /My-Blog/） */
+function collectAssets(publicRoot, basePath) {
+  const out = [];
+  const walk = (dir, rel) => {
+    let entries;
+    try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch (e) { return; }
+    for (const ent of entries) {
+      const abs = path.join(dir, ent.name);
+      const relName = rel ? rel + '/' + ent.name : ent.name;
+      if (ent.isDirectory()) walk(abs, relName);
+      else out.push(basePath + relName);
+    }
+  };
+  walk(publicRoot, '');
+  return out;
+}
+
+/** 生成 Service Worker */
+function generateSW(publicRoot, basePath) {
+  const assets = collectAssets(publicRoot, basePath);
+  const cacheName = `my-blog-${Date.now()}`;
+  const sw = `/* generated by scripts/optimize-site.js —— 勿手改 */
+const CACHE = '${cacheName}';
+const PRECACHE = ${JSON.stringify(assets, null, 2)};
+self.addEventListener('install', (e) => {
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
+});
+self.addEventListener('activate', (e) => {
+  e.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim()));
+});
+self.addEventListener('fetch', (e) => {
+  const req = e.request;
+  const url = new URL(req.url);
+  // 导航请求：网络优先，失败回退缓存
+  if (req.mode === 'navigate') {
+    e.respondWith(fetch(req).then((res) => {
+      const copy = res.clone();
+      caches.open(CACHE).then((c) => c.put(req, copy));
+      return res;
+    }).catch(() => caches.match(req).then((r) => r || caches.match('${basePath}index.html'))));
+    return;
+  }
+  // 静态资源：缓存优先
+  if (url.origin === self.location.origin && req.method === 'GET') {
+    e.respondWith(caches.match(req).then((cached) => cached || fetch(req).then((res) => {
+      if (res.ok) {
+        const copy = res.clone();
+        caches.open(CACHE).then((c) => c.put(req, copy));
+      }
+      return res;
+    })));
+  }
+});
+`;
+  const swPath = path.join(publicRoot, 'sw.js');
+  fs.writeFileSync(swPath, sw, 'utf8');
+  console.log(`[optimize] 已生成 ${path.relative(root, swPath)}（缓存 ${assets.length} 项）`);
+}
+
+function main() {
+  if (!fs.existsSync(publicDir)) {
+    console.error('[optimize] public 目录不存在，请先执行 hexo generate');
+    process.exit(1);
+  }
+
+  const cfg = readConfig();
+  const deny = buildDenylist(cfg);
+
+  let removed = 0;
+  let removedBytes = 0;
+  for (const d of deny) {
+    const abs = path.join(pluginsSrc, d);
+    if (fs.existsSync(abs)) {
+      const size = fs.existsSync(abs) ? dirSize(abs) : 0;
+      if (safeRmDir(d)) { removed++; removedBytes += size; }
+    }
+  }
+
+  // 站点子路径前缀（适配 GitHub Pages 子路径部署）
+  const rootCfg = path.join(root, '_config.yml');
+  let basePath = '/My-Blog/';
+  if (fs.existsSync(rootCfg)) {
+    const m = fs.readFileSync(rootCfg, 'utf8').match(/^\s*root:\s*["']?(\/[\w-]*\/)["']?/m);
+    if (m) basePath = m[1];
+  }
+
+  // 生成 SW
+  generateSW(publicDir, basePath);
+
+  console.log(`[optimize] 完成：裁剪 ${removed} 个插件目录（释放约 ${(removedBytes / 1024 / 1024).toFixed(2)} MB）`);
+}
+
+function dirSize(dir) {
+  let total = 0;
+  const walk = (d) => {
+    let ents; try { ents = fs.readdirSync(d, { withFileTypes: true }); } catch (e) { return; }
+    for (const ent of ents) {
+      const abs = path.join(d, ent.name);
+      if (ent.isDirectory()) walk(abs);
+      else total += fs.statSync(abs).size;
+    }
+  };
+  walk(dir);
+  return total;
+}
+
+if (require.main === module) main();

@@ -1,39 +1,21 @@
 # 作品集数据
-# 使用方法：
-#   新增编程项目 → 在 projects 列表里加一条记录
-#   新增文章/笔记 → 在 notes 列表里加一条记录
-# 每条记录字段说明：
-#   name       作品名称（必填）
-#   url        作品链接（外链或站内 /posts/xxx/）
-#   date       时间/日期（可选），如 2023-12、2026-08，会在卡片右上角显示
-#   description 一句话简介
-#   icon       Font Awesome 图标（可选），如 fab fa-github / fas fa-book
-#   tags       技术栈/标签数组（可选）
+#
+# 编程项目：不再在此文件维护，改为在 source/works/ 下新建 .md 页面
+#   → 模板见 scaffolds/project.md，复制到 source/works/ 下修改即可
+#   → 概览页会自动列出所有 type: project 的页面
+#
+# 文章 / 笔记：继续在此文件的 notes 列表维护
+#   每条记录字段：
+#     name       名称（必填）
+#     url        链接（外链或站内 /posts/xxx/）
+#     date       时间（可选）
+#     description 一句话简介
+#     icon       Font Awesome 图标（可选）
+#     tone       卡片色调（可选，默认 green）：green / blue / beige / purple
+#     tags       标签数组（可选）
 
 project_title: 编程项目
 note_title: 文章 / 笔记
-
-projects:
-  - name: My-Blog
-    url: /
-    date: 2026-08
-    description: 本站的源码仓库，基于 Hexo + Butterfly 的二次元风格个人博客，持续更新中
-    icon: fas fa-blog
-    tags: [Hexo, Butterfly, Markdown]
-
-  - name: 教师信息管理系统
-    url: https://github.com/HLGZJY/c-course-design-teacher-system
-    date: 2023-12
-    description: C 语言课程设计，控制台教师信息增删改查、排序、多维统计与二进制文件持久化
-    icon: fab fa-github
-    tags: [C, 课程设计]
-
-  - name: 校易通
-    url: https://github.com/HLGZJY/My_School_Store_Tool
-    date: 2026-08
-    description: 校园信息聚合微信小程序，聚合多源校园资讯，AI 智能解析、标签提取与三角色个性化推荐
-    icon: fab fa-github
-    tags: [uni-app, Vue3, 微信小程序, AI]
 
 notes:
   - name: 博客搭建记录
@@ -41,10 +23,12 @@ notes:
     date: 2026-08
     description: 记录从零搭建这个二次元博客的全过程与踩坑笔记
     icon: fas fa-pen-nib
+    tone: green
     tags: [教程, Hexo]
 
   - name: 示例笔记
     url: /archives/
     description: 这是一张示例笔记卡片，替换成你自己的文章或笔记
     icon: fas fa-book
+    tone: green
     tags: [笔记]

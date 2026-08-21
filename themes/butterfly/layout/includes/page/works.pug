@@ -1,50 +1,121 @@
-//- 作品集页面组件
-//- 数据来源：source/_data/works.yml
-//- 用法：新增作品 → 在 works.yml 的 projects 或 notes 列表里加一条即可
+//- 作品集概览页组件
+//- 页面类型：type: works（对应 source/works/index.md）
+//- 项目卡片：自动从 source/works/ 下的 type: project 页面生成
+//- 文章/笔记：从 source/_data/works.yml 的 notes 列表读取
+
+//- ============================================================
+//- 日期格式化（兼容「单日期」与「日期区间」）
+//-   单日期：  2023-12-15            → 卡片 2023.12 / 详情 2023-12-15
+//-   日期区间：2025-08-25-2026-05-09 → 卡片 2025.08 – 2026.05 / 详情 2025-08-25 ~ 2026-05-09
+//- 注意：Hexo 会把无法识别的区间字符串改写为「文件修改时间」，
+//-       因此这里直接读取原始 front-matter（item.raw）还原作者填写的真实日期，
+//-       而不是依赖被改写过的 item.date。
+//- ============================================================
+- function formatWorkDate(dateStr, compact) {
+-   if (!dateStr) return '';
+-   var segs = String(dateStr).split('-').filter(function (s) { return s.length > 0; });
+-   // 6 段 = 年-月-日-年-月-日，判定为区间
+-   if (segs.length === 6) {
+-     var s1 = segs.slice(0, 3).join('-');
+-     var s2 = segs.slice(3).join('-');
+-     if (compact) return date(s1, 'YYYY.MM') + ' – ' + date(s2, 'YYYY.MM');
+-     return date(s1, 'YYYY-MM-DD') + ' ~ ' + date(s2, 'YYYY-MM-DD');
+-   }
+-   return date(dateStr, compact ? 'YYYY.MM' : 'YYYY-MM-DD');
+- }
+
+//- 从页面原始 front-matter 中取出 date 字段的原始字符串
+- function rawDateOf(page) {
+-   var m = (page.raw || '').toString().match(/^\s*date:\s*(.+?)\s*$/m);
+-   return m ? m[1] : (page.date ? date(page.date, 'YYYY-MM-DD') : '');
+- }
+
+//- 单张编程项目卡片
+//- tone：卡片色调（在文章 front-matter 中定义，取值 blue/beige/purple/green 等，见 scaffolds/project.md）
+mixin projectCard(item)
+  - var dateText = formatWorkDate(rawDateOf(item), true)
+  - var hasLinks = item.repo || item.demo
+  - var cardTone = item.tone || 'default'
+  .work-card(data-tone=cardTone)
+    .work-card__header
+      .work-card__icon
+        i(class=item.icon || 'fas fa-laptop-code')
+      .work-card__heading
+        h3.work-card__title
+          a(href=url_for(item.path))= item.title
+        if item.role
+          span.work-card__role= item.role
+      if dateText
+        .work-card__date(title='项目周期')
+          i.fas.fa-calendar-alt
+          span= dateText
+    p.work-card__desc= item.subtitle || item.description || ''
+    if item.tech_stack && item.tech_stack.length
+      .work-card__tags
+        each tag in item.tech_stack
+          span.work-card__tag= tag
+    .work-card__footer(class=(hasLinks ? '' : 'work-card__footer--solo'))
+      a.work-card__cta(href=url_for(item.path))
+        span 查看详情
+        i.fas.fa-arrow-right
+      if hasLinks
+        .work-card__exts
+          if item.demo
+            a.work-card__ext(href=item.demo target='_blank' rel='noopener noreferrer' title='在线演示')
+              i.fas.fa-external-link-alt
+          if item.repo
+            a.work-card__ext(href=item.repo target='_blank' rel='noopener noreferrer' title='源码仓库')
+              i.fab.fa-github
+
+//- 单张笔记卡片（沿用既有 .work-head / .work-date / .work-tags 样式）
+mixin noteCard(item)
+  - var dateText = formatWorkDate(item.date, true)
+  - var noteTone = item.tone || 'green'
+  .work-card.work-card--note(data-tone=noteTone)
+    .work-head
+      h3
+        a(
+          href=url_for(item.url)
+          target=(item.url.indexOf('http') === 0 ? '_blank' : undefined)
+          rel=(item.url.indexOf('http') === 0 ? 'noopener noreferrer' : undefined)
+        )
+          i(class=item.icon || 'fab fa-github')
+          span= item.name
+      if dateText
+        .work-date
+          i.fas.fa-calendar-alt
+          span= dateText
+    p= item.description
+    if item.tags
+      .work-tags
+        each tag in item.tags
+          span= tag
+
+//- 笔记分区
+mixin noteSection(icon, title, items)
+  if items && items.length > 0
+    h2.section-title
+      i(class=icon)
+      span= title
+    .works-grid
+      each item in items
+        +noteCard(item)
+
 #article-container.works-wrap
   if page.content
     != page.content
 
-  if site.data.works.projects && site.data.works.projects.length > 0
-    h2.section-title
-      i.fas.fa-laptop-code
-      span= site.data.works.project_title || '编程项目'
-    .works-grid
-      each item in site.data.works.projects
-        .work-card
-          .work-head
-            h3
-              a(href=url_for(item.url) target=(item.url.indexOf('http') === 0 ? '_blank' : undefined) rel=item.url.indexOf('http') === 0 ? 'noopener noreferrer' : undefined)
-                i(class=item.icon || 'fab fa-github')
-                span= item.name
-            if item.date
-              .work-date
-                i.fas.fa-calendar-alt
-                span= item.date
-          p= item.description
-          if item.tags
-            .work-tags
-              each tag in item.tags
-                span= tag
+  //- 编程项目卡片：自动从 type: project 页面生成
+  //- 排序：按 order 升序（order 越小越靠前；缺省排到最后），符合「主打项目 order 小」的直觉
+  - var projects = site.pages.toArray().filter(function (p) { return p.type === 'project'; });
+  - projects.sort(function (a, b) { return ((typeof a.order === 'number') ? a.order : 9999) - ((typeof b.order === 'number') ? b.order : 9999); });
+  h2.section-title
+    i.fas.fa-laptop-code
+    span= (site.data.works && site.data.works.project_title) || '编程项目'
+  .works-grid
+    each item in projects
+      +projectCard(item)
 
-  if site.data.works.notes && site.data.works.notes.length > 0
-    h2.section-title
-      i.fas.fa-pen-nib
-      span= site.data.works.note_title || '文章 / 笔记'
-    .works-grid
-      each item in site.data.works.notes
-        .work-card
-          .work-head
-            h3
-              a(href=url_for(item.url) target=(item.url.indexOf('http') === 0 ? '_blank' : undefined) rel=item.url.indexOf('http') === 0 ? 'noopener noreferrer' : undefined)
-                i(class=item.icon || 'fas fa-book')
-                span= item.name
-            if item.date
-              .work-date
-                i.fas.fa-calendar-alt
-                span= item.date
-          p= item.description
-          if item.tags
-            .work-tags
-              each tag in item.tags
-                span= tag
+  //- 文章 / 笔记：从 works.yml 数据读取
+  if site.data.works && site.data.works.notes
+    +noteSection('fas fa-pen-nib', site.data.works.note_title || '文章 / 笔记', site.data.works.notes)
