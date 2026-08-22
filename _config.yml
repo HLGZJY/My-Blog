@@ -116,6 +116,9 @@ deploy:
 OhMyLive2d:
   enable: true
   CDN: /My-Blog/oml2d/index.min.js
+  # then 会原样拼到 loadOml2d(...) 同一段脚本里：
+  # 把 const oml2d 实例挂到 window，供 source/js/custom.js 调用 tipsMessage
+  then: "window.oml2d = oml2d;"
   option:
     dockedPosition: 'right' # 模型停靠位置: left / right
     mobileDisplay: false # 移动端不显示
@@ -137,6 +140,6 @@ OhMyLive2d:
         top: -100px
       idleTips:
         interval: 15000
-        message:
-          - 你好呀~ 欢迎来到我的小站
-          - 认真看代码的人最可爱了 ✨
+        # 闲时话术已统一交给 source/js/custom.js 驱动（与网站信息合并轮播）
+        # 此处留空，避免库自身再播一遍导致重复
+        message: []

@@ -1079,7 +1079,7 @@ inject:
     # 注册 Service Worker（缓存策略：HTML 网络优先 / 静态资源缓存优先），提升回访与离线体验
     - <script>if('serviceWorker'in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/My-Blog/sw.js',{scope:'/My-Blog/'}).catch(function(e){console.log('SW register failed',e);});});}</script>
   bottom:
-    - <script src="/js/custom.js"></script>
+    - <script src="/My-Blog/js/custom.js"></script>
 
 # CDN Settings
 # Don't modify the following settings unless you know how they work

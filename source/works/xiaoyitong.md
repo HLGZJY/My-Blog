@@ -3,7 +3,7 @@ title: 校易通
 type: project
 date: 2025-08-25-2026-05-09
 subtitle: 校园信息聚合微信小程序
-role: 项目负责人，主要开发
+role: 项目负责人
 icon: fas fa-mobile-alt
 order: 1
 tone: blue

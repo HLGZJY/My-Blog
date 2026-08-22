@@ -1,29 +1,33 @@
 extends includes/layout.pug
 
 block content
-  //- 首页作品集入口横幅（自建组件，主题升级后需保留）
+  //- 首页内容 wrapper（自建组件 + 文章列表）
+  //- 主题 .layout 期望 2 个直接子元素：第一栏 74% + #aside-content 26%；
+  //- 这里用一个 wrapper 把首页作品集横幅 + 文章列表都包住，保持 .layout 子元素结构不被破坏。
   //- 数据来源：source/works/ 下 type: project 页面 + source/_data/works.yml 的 notes
   - var homeProjectCount = site.pages.toArray().filter(function (p) { return p.type === 'project'; }).length
   - var homeNoteCount = (site.data.works && site.data.works.notes) ? site.data.works.notes.length : 0
-  .home-works-entry
-    .home-works-entry__inner
-      .home-works-entry__text
-        h2.home-works-entry__title
-          i.fas.fa-laptop-code
-          span 作品集
-        p.home-works-entry__subtitle 编程项目与笔记整理，持续更新中～
-      .home-works-entry__stats
-        if homeProjectCount > 0
-          span.home-works-entry__stat
-            i.fas.fa-code
-            = homeProjectCount + ' 个编程项目'
-        if homeNoteCount > 0
-          span.home-works-entry__stat
-            i.fas.fa-pen-nib
-            = homeNoteCount + ' 篇笔记'
-      a.home-works-entry__btn(href=url_for('/works/'))
-        span 进入作品集
-        i.fas.fa-arrow-right
+  #home-content
+    //- 首页作品集入口横幅（自建组件，主题升级后需保留）
+    .home-works-entry
+      .home-works-entry__inner
+        .home-works-entry__text
+          h2.home-works-entry__title
+            i.fas.fa-laptop-code
+            span 作品集
+          p.home-works-entry__subtitle 编程项目与笔记整理，持续更新中～
+        .home-works-entry__stats
+          if homeProjectCount > 0
+            span.home-works-entry__stat
+              i.fas.fa-code
+              = homeProjectCount + ' 个编程项目'
+          if homeNoteCount > 0
+            span.home-works-entry__stat
+              i.fas.fa-pen-nib
+              = homeNoteCount + ' 篇笔记'
+        a.home-works-entry__btn(href=url_for('/works/'))
+          span 进入作品集
+          i.fas.fa-arrow-right
 
-  include ./includes/mixins/indexPostUI.pug
-  +indexPostUI
+    include ./includes/mixins/indexPostUI.pug
+    +indexPostUI
