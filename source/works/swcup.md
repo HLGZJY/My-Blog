@@ -6,7 +6,7 @@ subtitle: AI 流浪动物防重复救助系统，手机拍鼻纹 2 秒识别是�
 role: 队长
 icon: fas fa-paw
 order: 5
-tone: blue
+tone: beige
 repo: https://github.com/HLGZJY/swcup
 tech_stack:
   - UniApp

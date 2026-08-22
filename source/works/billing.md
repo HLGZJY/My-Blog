@@ -6,7 +6,7 @@ subtitle: 基于 Go 实现的三档阶梯电费计算，支持峰谷时段调节
 role: 独立开发
 icon: fas fa-calculator
 order: 2
-tone: blue
+tone: green
 repo: https://github.com/HLGZJY/billing
 tech_stack:
   - Go

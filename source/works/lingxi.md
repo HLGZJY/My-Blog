@@ -6,7 +6,7 @@ subtitle: 仿 WPS 灵犀风格的 AI 聊天助手，纯原生前端实战项目
 role: 独立开发
 icon: fas fa-robot
 order: 2
-tone: blue
+tone: purple
 repo: https://github.com/HLGZJY/lingxi
 tech_stack:
   - HTML5 + CSS + JavaScript（原生，无框架）

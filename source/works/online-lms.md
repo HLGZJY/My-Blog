@@ -6,7 +6,7 @@ subtitle: React + Koa 全栈在线学习管理系统，含 JWT 认证、课程/�
 role: 独立开发
 icon: fas fa-graduation-cap
 order: 4
-tone: blue
+tone: green
 repo: https://github.com/HLGZJY/online-lms
 tech_stack:
   - React 19
