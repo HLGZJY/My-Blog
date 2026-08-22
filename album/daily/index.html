@@ -1,0 +1,199 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>日常 | This is a Blog of HLGZJY~</title><meta name="author" content="HLGZJY"><meta name="copyright" content="HLGZJY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="fff5f9"><meta name="description" content="[{&quot;url&quot;:&quot;&#x2F;img&#x2F;album&#x2F;placeholder2.svg&quot;,&quot;alt&quot;:&quot;示例图&quot;,&quot;title&quot;:&quot;&quot;},{&quot;url&quot;:&quot;&#x2F;img&#x2F;album&#x2F;placeholder1.svg&quot;,&quot;alt&quot;:&quot;示例图&quot;,&quot;title&quot;:&quot;&quot;}]      替换成你的日常照片即可，支持本地路径或外链。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="日常">
+<meta property="og:url" content="https://hlgzjy.github.io/My-Blog/album/daily/index.html">
+<meta property="og:site_name" content="This is a Blog of HLGZJY~">
+<meta property="og:description" content="[{&quot;url&quot;:&quot;&#x2F;img&#x2F;album&#x2F;placeholder2.svg&quot;,&quot;alt&quot;:&quot;示例图&quot;,&quot;title&quot;:&quot;&quot;},{&quot;url&quot;:&quot;&#x2F;img&#x2F;album&#x2F;placeholder1.svg&quot;,&quot;alt&quot;:&quot;示例图&quot;,&quot;title&quot;:&quot;&quot;}]      替换成你的日常照片即可，支持本地路径或外链。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hlgzjy.github.io/My-Blog/img/logo.jpg">
+<meta property="article:published_time" content="2026-08-22T09:26:09.075Z">
+<meta property="article:modified_time" content="2026-08-22T09:26:09.075Z">
+<meta property="article:author" content="HLGZJY">
+<meta property="article:tag" content="anime">
+<meta property="article:tag" content="blog">
+<meta property="article:tag" content="二次元">
+<meta property="article:tag" content="编程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hlgzjy.github.io/My-Blog/img/logo.jpg"><script type="application/ld+json"></script><link rel="shortcut icon" href="/My-Blog/img/logo.jpg"><link rel="canonical" href="https://hlgzjy.github.io/My-Blog/album/daily/index.html"><link rel="preconnect"/><link rel="stylesheet" href="/My-Blog/css/index.css?v=5.7.0"><link rel="stylesheet" href="/My-Blog/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=7.3.1"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#1a1a2e')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', 'fff5f9')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/My-Blog/',
+  algolia: undefined,
+  localSearch: {"path":"/My-Blog/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: '/My-Blog/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.13.0',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: true,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '日常',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'page'
+}</script><link rel="stylesheet" href="/My-Blog/css/custom.css"><script>if('serviceWorker'in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/My-Blog/sw.js',{scope:'/My-Blog/'}).catch(function(e){console.log('SW register failed',e);});});}</script><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/My-Blog/img/logo.jpg" onerror="this.onerror=null;this.src='/My-Blog/img/friend_404.gif'" alt="avatar"/ loading='lazy'></div><div class="site-data text-center"><a href="/My-Blog/archives/"><div class="headline">文章</div><div class="length-num">1</div></a><a href="/My-Blog/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/My-Blog/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/My-Blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/My-Blog/works/"><i class="fa-fw fas fa-palette"></i><span> 作品集</span></a></div><div class="menus_item"><a class="site-page" href="/My-Blog/archives/"><i class="fa-fw fas fa-file-lines"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/My-Blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/My-Blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/My-Blog/album/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/My-Blog/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="not-home-page fixed" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/My-Blog/"><img class="site-icon" src="/My-Blog/img/logo.jpg" alt="Logo" loading='lazy'><span class="site-name">This is a Blog of HLGZJY~</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/My-Blog/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/My-Blog/works/"><i class="fa-fw fas fa-palette"></i><span> 作品集</span></a></div><div class="menus_item"><a class="site-page" href="/My-Blog/archives/"><i class="fa-fw fas fa-file-lines"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/My-Blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/My-Blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/My-Blog/album/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/My-Blog/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="page-site-info"><h1 id="site-title">日常</h1></div></header><main class="layout hide-aside" id="content-inner"><div id="page"><div class="container" id="article-container"><div class="gallery-container" data-type="data" data-button="" data-limit="10" data-first="10">
+    <div class="gallery-items">[{"url":"/img/album/placeholder2.svg","alt":"示例图","title":""},{"url":"/img/album/placeholder1.svg","alt":"示例图","title":""}]</div>
+  </div>
+
+<blockquote>
+<p>替换成你的日常照片即可，支持本地路径或外链。</p>
+</blockquote>
+</div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2024 - 2026 By HLGZJY</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.2</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.7.0</a></span></div><div class="footer_custom_text">用 ❤ 与二次元之力构建</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/My-Blog/js/utils.js?v=5.7.0"></script><script src="/My-Blog/js/main.js?v=5.7.0"></script><script src="/My-Blog/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><div class="js-pjax"></div><script src="/My-Blog/js/custom.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索站内文章..." type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/My-Blog/js/search/local-search.js?v=5.7.0"></script></div></div><!-- hexo injector body_end start --><script data-pjax src="/My-Blog/oml2d/index.min.js"></script><script>const oml2d = OML2D.loadOml2d({dockedPosition:"right",mobileDisplay:false,models:[{"path":"/My-Blog/live2d_models/shizuku/shizuku.model.json","scale":0.15,"position":[-10,35],"stageStyle":{"width":250,"height":250},"motionPreloadStrategy":"IDLE"}],primaryColor:"#ff7eb3",sayHello:false,tips:{style: {"width":230,"height":120,"left":"calc(50% - 20px)","top":"-100px"},idleTips:{interval:15000,message:[]}}});window.oml2d = oml2d;</script><!-- hexo injector body_end end --></body></html>

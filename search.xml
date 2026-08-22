@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>欢迎来到我的小站！</title>
+      <link href="/My-Blog/posts/welcome-to-my-blog/"/>
+      <url>/My-Blog/posts/welcome-to-my-blog/</url>
+      
+        <content type="html"><![CDATA[<p>你好呀，欢迎来到 Ariey 的二次元代码小屋 🌸</p><p>这里是我的个人博客，用来记录：</p><ul><li>💻 编程学习笔记与踩坑记录</li><li>📝 项目开发心得</li><li>🎬 追番和生活随笔</li></ul><h2 id="关于这个博客"><a href="#关于这个博客" class="headerlink" title="关于这个博客"></a>关于这个博客</h2><p>本站基于 <strong>Hexo + Butterfly 主题</strong> 构建，托管在 GitHub Pages 上。</p><ul><li>写文章：在 <code>source/_posts/</code> 下新建 <code>.md</code> 文件，推送到 GitHub 即可自动发布</li><li>加作品：编辑 <code>source/_data/works.yml</code></li><li>加相册：编辑 <code>source/album/</code> 下的页面</li></ul><blockquote><p>慢慢充实内容中，敬请期待~ ✨</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 生活 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 随笔 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
+</search>
